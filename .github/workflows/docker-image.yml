@@ -22,5 +22,7 @@ jobs:
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag nikkeh/lancachestats-forked:$(date +%s)
+    - name: Docker Tag
+      run: docker tag nikkeh/lancachestats-forked:latest
     - name: Docker Push
       run: docker push nikkeh/lancachestats-forked:latest
