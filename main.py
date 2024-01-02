@@ -12,7 +12,7 @@ BUCKET = str(os.getenv("BUCKET", default=None))
 TOKEN = str(os.getenv("TOKEN", default=None))
 ORG = str(os.getenv("ORG", default=None))
 INFLUXURL = str(os.getenv("INFLUXURL", default="http://localhost:8086/"))
-LOG_FILE = str("/app/access.log")
+LOG_FILE = str(os.getenv("LOG_FILE",default="/app/access.log"))
 INTERVAL = int(os.getenv("INTERVAL", default=60))
 DEBUG = bool(os.getenv("DEBUG", default=False))
 
