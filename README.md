@@ -1,3 +1,6 @@
+Forked to make Log_File a configurable env for use in my unraid stack.
+
+
 # lancachestats
 Used for ingesting data from https://lancache.net/ into an InfluxDB.  
 
