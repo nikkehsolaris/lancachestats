@@ -16,6 +16,8 @@ LOG_FILE = str(os.getenv("LOG_FILE",default="/app/access.log"))
 INTERVAL = int(os.getenv("INTERVAL", default=60))
 DEBUG = bool(os.getenv("DEBUG", default=False))
 
+logging.basicConfig(filename='line_read.log', level=logging.INFO, format='%(asctime)s - %(message)s')
+
 async def write_influx(points):
     try:
         async with InfluxDBClientAsync(url=INFLUXURL, token=TOKEN, org=ORG) as client:
@@ -94,8 +96,18 @@ async def main():
                 await build_data(data)
                 data = {"timestamp": datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')}
                 _lastrun = datetime.now()
+        def process_line(line):
+            nonlocal _lastrun, data
+            current_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
+            try:
+                # Log each time a new line is read
+                logging.info(f'[{current_time}] Read line: {line}')
+            
+                if DEBUG: print(f'[{current_time}] DEBUG: {line}')
+                if DEBUG: print(f'[{current_time}] DEBUG: {data}')
         except Exception as e:
             print(f'[{current_time}] Exception: {traceback.print_tb(e.__traceback__)}')
+        
 
 current_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
 print(f'[{current_time}] Started!')
