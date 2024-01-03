@@ -40,6 +40,9 @@ async def build_data(data):
             p.tag("ipaddress", k)
             for kk,vv in data[k].items():
                 p.tag("platform", kk)
+                print(p.tag())
+                p.tag("url",kk)
+                print(p.tag())
                 for kkk,vvv in data[k][kk].items():
                     if kkk == "miss_bytes": miss_bytes = vvv
                     if kkk == "hit_bytes": hit_bytes = vvv
@@ -58,11 +61,11 @@ async def main():
         try:
             if DEBUG: print(f'[{current_time}] DEBUG: {line}')
             if DEBUG: print(f'[{current_time}] DEBUG: {data}')
-            result = re.search(r'\[(\w*)\] (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}).*" (\d{3}) (\d*) ".*" "(.*)" "(.*)" "(.*)" "(.*)"', line)
+            result = re.search(r'\[(\w*)\] (\S+).*\[(\d{2}/\w+/\d{4}:\d{2}:\d{2}:\d{2} -\d{4})\] "(GET|POST) (.+?) HTTP/\d\.\d" (\d{3}) (\d*) ".*" "(.*)" "(.*)" "(.*)" "(.*)"', line)
             if not result:
                 if DEBUG: print(f'[{current_time}] DEBUG: No Result Found... Skipping')
                 continue
-            platform, ipaddress, client, cachehit, statuscode, bytes, endpoint = result.group(1), result.group(2), result.group(5), result.group(6), int(result.group(3)), int(result.group(4)), result.group(7)
+            platform, ipaddress, client, cachehit, statuscode, bytes, endpoint, url = result.group(1), result.group(2), result.group(8), result.group(9), int(result.group(6)), int(result.group(7)), result.group(10), result.group(5)
             if ipaddress not in data.keys():
                 data[ipaddress] = {}
             dp = data[ipaddress]
